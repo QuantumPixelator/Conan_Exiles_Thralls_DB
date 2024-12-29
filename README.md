@@ -41,8 +41,13 @@ This is a desktop application for viewing and searching thrall data from the gam
 
 3. Enter search conditions (e.g., `Gender=female AND Level Rate=fast`) to filter results.
 
+## Screenshot
+
+![Thrall Data Viewer Screenshot](ss_thrallapp.png)
+
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ---
+
