@@ -43,7 +43,7 @@ class ThrallViewerApp(QWidget):
         # Search bar and button
         self.search_layout = QHBoxLayout()
         self.search_field = QLineEdit()
-        self.search_field.setPlaceholderText("Enter search conditions (e.g., Gender=female AND Level Rate=fast)")
+        self.search_field.setPlaceholderText("Enter search conditions (e.g., Gender=female AND Level Rate=fast, Agility=30 AND Strength<10, etc)")
         self.search_field.setStyleSheet("background-color: #3B3024; color: #E0C097; padding: 5px; border: 1px solid #6F4E37;")
         self.search_button = QPushButton("Search")
         self.search_button.setStyleSheet("background-color: #6F4E37; color: #E0C097; padding: 5px; border: 1px solid #8B5A2B;")
@@ -157,14 +157,17 @@ class ThrallViewerApp(QWidget):
             conditions = []
             params = []
 
-            # Parse query conditions (e.g., Gender=female AND Level Rate=fast)
+            # Parse query conditions (e.g., Agility>25 AND Vitality<=10)
             for condition in query.split(" AND "):
-                if "=" in condition:
-                    field, value = condition.split("=", 1)
-                    field = field.strip().lower().replace(" ", "_")
-                    value = value.strip()
-                    conditions.append(f"LOWER([{field}]) = LOWER(?)")
-                    params.append(value)
+                operators = [">=", "<=", ">", "<", "="]
+                for operator in operators:
+                    if operator in condition:
+                        field, value = condition.split(operator, 1)
+                        field = field.strip().lower().replace(" ", "_")
+                        value = value.strip()
+                        conditions.append(f"[{field}] {operator} ?")
+                        params.append(value)
+                        break
 
             sql = f"SELECT name FROM {table}"
             if conditions:
@@ -180,6 +183,7 @@ class ThrallViewerApp(QWidget):
                 self.name_list.addItem("No results found.")
         except Exception as e:
             self.name_list.addItem(f"Search error: {e}")
+
 
 if __name__ == "__main__":
     import sys
